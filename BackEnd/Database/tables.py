@@ -30,6 +30,8 @@ class Products(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     price = Column(Float, nullable=False)
+    image_url = Column(String(500),nullable=False)
+    categorie = Column(String(500),nullable=False)
     stock = Column(Integer, nullable=False, default=0)
 
     # Relationships

@@ -4,6 +4,7 @@ from Routers import purchases
 from Routers import users
 from Database.db import Base, engine
 from Database import tables
+from Utils import cloudinary
 
 app = FastAPI()
 app.include_router(users.router)

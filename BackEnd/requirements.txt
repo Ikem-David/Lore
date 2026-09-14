@@ -1,7 +1,9 @@
 fastapi
 sqlalchemy
 pydantic
-uvicorn
+uvicorn[standard]
 pwdlib[argon2]
 python-dotenv
 pymysql
+cloudinary
+python-multipart

@@ -15,10 +15,12 @@ def get_product_by_name(db: Session, name: str):
 	return db.query(Products).filter(Products.name == name).first()
 
 
-def create_product(db: Session, req: products.CreateProduct):
+def create_product(db: Session, req: products.CreateProduct,image_url:str):
 	new_data = Products(
 		name=req.name,
 		price=req.price,
+		categorie=req.categorie,
+		image_url=image_url,
 		stock=req.stock
 	)
 
@@ -28,7 +30,7 @@ def create_product(db: Session, req: products.CreateProduct):
 	return new_data
 
 
-def update_product(db: Session, product_id: int, req: products.UpdateProduct):
+def update_product(db: Session, product_id: int, req: products.UpdateProduct,image_url:str):
 	product = db.query(Products).filter(Products.id == product_id).first()
 
 	if not product:
@@ -39,6 +41,12 @@ def update_product(db: Session, product_id: int, req: products.UpdateProduct):
 
 	if req.price is not None:
 		product.price = req.price
+
+	if req.categorie is not None:
+		product.categorie = req.categorie
+
+	if image_url is not None:
+		product.image_url = image_url
 
 	if req.stock is not None:
 		product.stock = req.stock

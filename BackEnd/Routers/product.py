@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 from sqlalchemy.orm import Session
-
+import cloudinary.uploader
 from Database.DB_Methods import products as product_methods
 from Database.db import get_db
+from typing import Optional
 from Schema import products
 
 router = APIRouter(prefix="/product",tags=['Product'])
@@ -30,16 +31,57 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=products.ProductResponse, status_code=status.HTTP_201_CREATED)
-def create_product(req: products.CreateProduct, db: Session = Depends(get_db)):
-	if product_methods.get_product_by_name(db, req.name) is not None:
+async def create_product(
+		name : str = Form(...),
+		price : int = Form(...),
+		categorie : str = Form(...),
+		stock : int = Form(...),
+		image : UploadFile = File(...),
+		db: Session = Depends(get_db)
+	):
+
+	if product_methods.get_product_by_name(db,name) is not None:
 		raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Product name already exists")
 
-	return product_methods.create_product(db, req)
+	# Upload Image to Cloudinary
+	result = cloudinary.uploader.upload(image.file)
+	image_url = result["secure_url"]
+
+	req = products.CreateProduct(
+		name= name,
+		price=price,
+		categorie=categorie,
+		stock=stock
+	)
+
+	return product_methods.create_product(db,req,image_url)
 
 
 @router.put("/{product_id}", response_model=products.ProductResponse)
-def update_product(product_id: int, req: products.UpdateProduct, db: Session = Depends(get_db)):
-	product = product_methods.update_product(db, product_id, req)
+def update_product(
+		product_id: int,
+		name : Optional[str] = Form(None),
+		price : Optional[int] = Form(None),
+		categorie : Optional[str] = Form(None),
+		stock : Optional[int] = Form(None),
+		image : Optional[UploadFile] = File(None),
+		db: Session = Depends(get_db)
+	):
+
+	req = products.UpdateProduct(
+		name=name,
+		price=price,
+		categorie=categorie,
+		stock=stock,
+	)
+
+	image_url = None
+
+	if image is not None:
+		result = cloudinary.uploader.upload(image.file)
+		image_url = result["secure_url"]
+
+	product = product_methods.update_product(db, product_id,req,image_url)
 	if product is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
 	return product
