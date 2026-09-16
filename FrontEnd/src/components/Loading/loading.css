@@ -1,0 +1,156 @@
+.LoadingPage {
+    align-items: center;
+    background: #f7f7f4;
+    color: #002a3d;
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 48px clamp(24px, 8vw, 120px);
+    position: relative;
+}
+
+.LoadingPage::before,
+.LoadingPage::after {
+    border: 1px solid rgb(0 42 61 / 16%);
+    border-radius: 50%;
+    content: '';
+    height: min(52vw, 620px);
+    position: absolute;
+    right: max(-18vw, -240px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(52vw, 620px);
+}
+
+.LoadingPage::after {
+    height: min(42vw, 500px);
+    right: max(-13vw, -180px);
+    width: min(42vw, 500px);
+}
+
+.LoadingBrand {
+    align-items: center;
+    border: 1px solid #002a3d;
+    border-radius: 50%;
+    display: flex;
+    height: 96px;
+    justify-content: center;
+    left: clamp(24px, 8vw, 120px);
+    position: absolute;
+    top: 48px;
+    width: 96px;
+}
+
+.LoadingBrand span {
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-left: 3px;
+}
+
+.LoadingContent {
+    max-width: 520px;
+    position: relative;
+    z-index: 1;
+}
+
+.LoadingEyebrow {
+    color: #174d54;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin: 0 0 20px;
+}
+
+.LoadingContent h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(42px, 6vw, 76px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+    margin: 0;
+    max-width: 450px;
+}
+
+.LoadingTrack {
+    background: rgb(0 42 61 / 18%);
+    height: 1px;
+    margin: 42px 0 18px;
+    overflow: hidden;
+    width: min(360px, 100%);
+}
+
+.LoadingTrack span {
+    animation: loading-progress 1.8s ease-in-out infinite;
+    background: #174d54;
+    display: block;
+    height: 100%;
+    transform-origin: left;
+    width: 42%;
+}
+
+.LoadingMessage {
+    color: #5c686b;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.LoadingIndex {
+    bottom: 48px;
+    color: #174d54;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin: 0;
+    position: absolute;
+    right: clamp(24px, 8vw, 120px);
+}
+
+@keyframes loading-progress {
+    0% {
+        transform: translateX(-100%) scaleX(.7);
+    }
+    50% {
+        transform: translateX(80%) scaleX(1);
+    }
+    100% {
+        transform: translateX(240%) scaleX(.7);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .LoadingTrack span {
+        animation: none;
+        transform: scaleX(.65);
+    }
+}
+
+@media (max-width: 600px) {
+    .LoadingPage {
+        align-items: flex-start;
+        padding-top: 180px;
+    }
+
+    .LoadingBrand {
+        height: 76px;
+        left: 24px;
+        top: 36px;
+        width: 76px;
+    }
+
+    .LoadingPage::before,
+    .LoadingPage::after {
+        height: 100vw;
+        right: -58vw;
+        width: 100vw;
+    }
+
+    .LoadingPage::after {
+        height: 76vw;
+        right: -45vw;
+        width: 76vw;
+    }
+
+    .LoadingIndex {
+        bottom: 32px;
+        right: 24px;
+    }
+}

@@ -2,9 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from Database.DB_Methods import users as user_methods
 from Database.db import get_db
+from auth import get_current_user
 from Schema import cartitems, users
 
-router = APIRouter(prefix="/users",tags=['Users'])
+router = APIRouter(
+	prefix="/users",
+	tags=['Users'],
+	dependencies=[Depends(get_current_user)]
+)
 
 # User Endpoints
 @router.get("/", response_model=list[users.UserResponse])

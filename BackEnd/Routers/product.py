@@ -3,10 +3,14 @@ from sqlalchemy.orm import Session
 import cloudinary.uploader
 from Database.DB_Methods import products as product_methods
 from Database.db import get_db
+from auth import get_current_user
 from typing import Optional
 from Schema import products
 
-router = APIRouter(prefix="/product",tags=['Product'])
+router = APIRouter(
+	prefix="/product",
+	tags=['Product']
+)
 
 
 @router.get("/", response_model=list[products.ProductResponse])
@@ -37,7 +41,8 @@ async def create_product(
 		categorie : str = Form(...),
 		stock : int = Form(...),
 		image : UploadFile = File(...),
-		db: Session = Depends(get_db)
+		db: Session = Depends(get_db),
+		current_user = Depends(get_current_user)
 	):
 
 	if product_methods.get_product_by_name(db,name) is not None:
@@ -65,7 +70,8 @@ def update_product(
 		categorie : Optional[str] = Form(None),
 		stock : Optional[int] = Form(None),
 		image : Optional[UploadFile] = File(None),
-		db: Session = Depends(get_db)
+		db: Session = Depends(get_db),
+		current_user = Depends(get_current_user)
 	):
 
 	req = products.UpdateProduct(
@@ -88,7 +94,7 @@ def update_product(
 
 
 @router.delete("/{product_id}", response_model=products.ProductResponse)
-def delete_product(product_id: int, db: Session = Depends(get_db)):
+def delete_product(product_id: int, db: Session = Depends(get_db),current_user = Depends(get_current_user)):
 	product = product_methods.delete_product(db, product_id)
 	if product is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")

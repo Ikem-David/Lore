@@ -12,7 +12,7 @@ const useFetch = (url) => {
             try {
                 setLoading(true);
                 setError(null);
-
+                await new Promise(resolve => setTimeout(resolve, 3000));
                 const response = await fetch(url, { signal: controller.signal });
 
                 if (!response.ok) {

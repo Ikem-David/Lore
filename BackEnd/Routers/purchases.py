@@ -2,9 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from Database.DB_Methods import purchases as purchase_methods
 from Database.db import get_db
+from auth import get_current_user
 from Schema import purchaseitems, purchases
 
-router = APIRouter(prefix="/purchases",tags=['Purchases'])
+router = APIRouter(
+	prefix="/purchases",
+	tags=['Purchases'],
+	dependencies=[Depends(get_current_user)]
+)
 
 # Purchase Endpoints
 @router.get("/", response_model=list[purchases.PurchaseResponse])

@@ -4,6 +4,7 @@ import { useCart } from '../components/Cart/cart'
 import { useEffect, useState } from 'react'; 
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../components/useFetch';
+import Loading from '../components/Loading/loading';
 
 const Shop = () => {
     const {data,loading,error} = useFetch(
@@ -22,7 +23,7 @@ const Shop = () => {
     }, []);
 
     if (loading) {
-        return <p>Loading ...</p>
+        return <Loading />
     }
 
     if (error) {
@@ -124,7 +125,7 @@ const Shop = () => {
                     fontSize: '14px',
                     fontWeight: '600',
                     color: '#333333',
-                }}>{product.price}</span>
+                }}>${product.price}</span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#888888', margin: '4px 0 0 4px' }}>{product.categorie}</p>
             </div>
