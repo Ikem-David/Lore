@@ -11,7 +11,7 @@ from Utils import cloudinary
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://lore-ikem2.vercel.app/"],
+    allow_origins=["https://lore-lqwq0k2us-ikem2.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
