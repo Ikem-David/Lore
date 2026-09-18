@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from Database.tables import Users, CartItem
+from Database.tables import Users, CartItem, Products
 from Schema import users, cartitems
 from components import hasher
 
@@ -81,6 +81,77 @@ def get_user_cart(db: Session, user_id: int):
     return db.query(CartItem).filter(
         CartItem.user_id == user_id
     ).all()
+
+
+def add_user_cart_item(db: Session, user_id: int, req: cartitems.CreateCurrentCartItem):
+    product = db.query(Products).filter(Products.id == req.product_id).first()
+    if product is None:
+        raise ValueError("Product not found")
+
+    existing_item = db.query(CartItem).filter(
+        CartItem.user_id == user_id,
+        CartItem.product_id == req.product_id
+    ).first()
+
+    next_quantity = req.quantity + (existing_item.quantity if existing_item else 0)
+    if next_quantity > product.stock:
+        raise ValueError(f"Only {product.stock} item(s) available")
+
+    if existing_item:
+        existing_item.quantity += req.quantity
+        db.commit()
+        db.refresh(existing_item)
+        return existing_item
+
+    return create_cart_item(
+        db,
+        cartitems.CreateCartItem(
+            user_id=user_id,
+            product_id=req.product_id,
+            quantity=req.quantity
+        )
+    )
+
+
+def update_user_cart_item(
+    db: Session,
+    user_id: int,
+    product_id: int,
+    req: cartitems.UpdateCartItem
+):
+    item = db.query(CartItem).filter(
+        CartItem.user_id == user_id,
+        CartItem.product_id == product_id
+    ).first()
+
+    if not item:
+        return None
+
+    if req.quantity is not None:
+        product = db.query(Products).filter(Products.id == product_id).first()
+        if product is None:
+            return None
+        if req.quantity > product.stock:
+            raise ValueError(f"Only {product.stock} item(s) available")
+        item.quantity = req.quantity
+
+    db.commit()
+    db.refresh(item)
+    return item
+
+
+def delete_user_cart_item(db: Session, user_id: int, product_id: int):
+    item = db.query(CartItem).filter(
+        CartItem.user_id == user_id,
+        CartItem.product_id == product_id
+    ).first()
+
+    if not item:
+        return None
+
+    db.delete(item)
+    db.commit()
+    return item
 
 
 def update_cart_item(

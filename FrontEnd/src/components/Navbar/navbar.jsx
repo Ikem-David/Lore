@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import './navbar.css'
 import Cart from "../Cart/cart";
 
 const NavBar = ({ profileImage = "" }) => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.dispatchEvent(new Event('auth-change'));
+        navigate('/');
+    };
+
     return (
         <div className="NavContainer">
             <div className="NavLogo" aria-label="Store logo">
@@ -10,13 +19,17 @@ const NavBar = ({ profileImage = "" }) => {
             </div>
             <div className="NavBar">
                 <ul>
-                    <Link className="NavLink" to={'/'}><li>Home</li></Link>
+                    <Link className="NavLink" to={'/home'}><li>Home</li></Link>
                     <Link className="NavLink" to={'/shop'}><li>Shop</li></Link>
+                    <Link className="NavLink" to={'/purchases'}><li>Purchases</li></Link>
                     <Link className="NavLink" to={'/contact'}><li>Contact</li></Link>
                 </ul>
             </div>
             <div className="NavItems">
                 <Cart />
+                <button type="button" className="LogoutButton" onClick={handleLogout}>
+                    Log out
+                </button>
             </div>
         </div>
     );

@@ -17,6 +17,14 @@ def read_purchases(db: Session = Depends(get_db)):
 	return purchase_methods.get_all_purchases(db)
 
 
+@router.get("/me", response_model=list[purchases.PurchaseResponse])
+def read_current_user_purchases(
+	current_user=Depends(get_current_user),
+	db: Session = Depends(get_db)
+):
+	return purchase_methods.get_user_purchases(db, current_user.id)
+
+
 @router.get("/user/{user_id}", response_model=list[purchases.PurchaseResponse])
 def read_user_purchases(user_id: int, db: Session = Depends(get_db)):
 	return purchase_methods.get_user_purchases(db, user_id)
@@ -33,6 +41,19 @@ def read_purchase(purchase_id: int, db: Session = Depends(get_db)):
 @router.post("/user/{user_id}", response_model=purchases.PurchaseResponse, status_code=status.HTTP_201_CREATED)
 def create_purchase(user_id: int, req: purchases.PurchasesBase, db: Session = Depends(get_db)):
 	return purchase_methods.create_purchase(db, user_id, req)
+
+
+@router.post("/checkout", response_model=purchases.PurchaseResponse, status_code=status.HTTP_201_CREATED)
+def checkout(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+	try:
+		purchase = purchase_methods.checkout(db, current_user.id)
+	except ValueError as error:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+
+	if purchase is None:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Your cart is empty")
+
+	return purchase
 
 
 @router.put("/{purchase_id}", response_model=purchases.PurchaseResponse)

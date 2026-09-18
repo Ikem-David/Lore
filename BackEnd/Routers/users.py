@@ -8,7 +8,6 @@ from Schema import cartitems, users
 router = APIRouter(
 	prefix="/users",
 	tags=['Users'],
-	dependencies=[Depends(get_current_user)]
 )
 
 # User Endpoints
@@ -42,6 +41,53 @@ def create_user(req: users.CreateUser, db: Session = Depends(get_db)):
 		raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already exists")
 
 	return user_methods.create_user(db, req)
+
+
+@router.get("/me/cart", response_model=list[cartitems.CartResponse])
+def read_current_user_cart(
+	current_user=Depends(get_current_user),
+	db: Session = Depends(get_db)
+):
+	return user_methods.get_user_cart(db, current_user.id)
+
+
+@router.post("/me/cart", response_model=cartitems.CartResponse, status_code=status.HTTP_201_CREATED)
+def create_current_user_cart_item(
+	req: cartitems.CreateCurrentCartItem,
+	current_user=Depends(get_current_user),
+	db: Session = Depends(get_db)
+):
+	try:
+		return user_methods.add_user_cart_item(db, current_user.id, req)
+	except ValueError as error:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+
+
+@router.put("/me/cart/{product_id}", response_model=cartitems.CartResponse)
+def update_current_user_cart_item(
+	product_id: int,
+	req: cartitems.UpdateCartItem,
+	current_user=Depends(get_current_user),
+	db: Session = Depends(get_db)
+):
+	try:
+		item = user_methods.update_user_cart_item(db, current_user.id, product_id, req)
+	except ValueError as error:
+		raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+	if item is None:
+		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
+	return item
+
+
+@router.delete("/me/cart/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_current_user_cart_item(
+	product_id: int,
+	current_user=Depends(get_current_user),
+	db: Session = Depends(get_db)
+):
+	item = user_methods.delete_user_cart_item(db, current_user.id, product_id)
+	if item is None:
+		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
 
 
 @router.put("/{user_id}", response_model=users.UserResponse)

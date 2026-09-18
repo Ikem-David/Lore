@@ -11,6 +11,7 @@
 .NavContainer {
     align-items: center;
     display: flex;
+    gap: 24px;
     justify-content: space-between;
     padding: 0 32px;
     padding-top: 16px;
@@ -53,6 +54,29 @@
     padding: 0;
 }
 
+.LogoutButton {
+    background: #002a3d !important;
+    border: 1px solid #002a3d !important;
+    border-radius: 999px;
+    color: #ffffff !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    padding: 9px 16px !important;
+    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.LogoutButton:hover {
+    background: #174d54 !important;
+    border-color: #174d54 !important;
+    transform: translateY(-1px);
+}
+
+.LogoutButton:focus-visible {
+    outline: 3px solid rgba(23, 77, 84, 0.35);
+    outline-offset: 3px;
+}
+
 .ProfilePicture {
     align-items: center;
     background-color: #000000;
@@ -78,4 +102,52 @@
 .NavLink {
     text-decoration: none;
     color: black;
+}
+
+@media (max-width: 900px) {
+    .NavContainer {
+        gap: 16px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .NavBar ul,
+    .NavItems {
+        gap: 16px;
+    }
+
+    .NavBar li {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .NavContainer {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 12px;
+    }
+
+    .NavContainer > div {
+        flex: 0 1 auto;
+    }
+
+    .NavLogo {
+        margin-right: auto;
+    }
+
+    .NavBar {
+        flex-basis: 100%;
+        order: 3;
+    }
+
+    .NavBar ul {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .LogoutButton {
+        font-size: 0.78rem !important;
+        padding: 8px 12px !important;
+    }
 }

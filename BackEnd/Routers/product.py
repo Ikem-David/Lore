@@ -42,7 +42,6 @@ async def create_product(
 		stock : int = Form(...),
 		image : UploadFile = File(...),
 		db: Session = Depends(get_db),
-		current_user = Depends(get_current_user)
 	):
 
 	if product_methods.get_product_by_name(db,name) is not None:
@@ -71,7 +70,6 @@ def update_product(
 		stock : Optional[int] = Form(None),
 		image : Optional[UploadFile] = File(None),
 		db: Session = Depends(get_db),
-		current_user = Depends(get_current_user)
 	):
 
 	req = products.UpdateProduct(
@@ -94,7 +92,7 @@ def update_product(
 
 
 @router.delete("/{product_id}", response_model=products.ProductResponse)
-def delete_product(product_id: int, db: Session = Depends(get_db),current_user = Depends(get_current_user)):
+def delete_product(product_id: int, db: Session = Depends(get_db)):
 	product = product_methods.delete_product(db, product_id)
 	if product is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")

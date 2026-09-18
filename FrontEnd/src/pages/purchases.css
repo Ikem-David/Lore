@@ -1,0 +1,150 @@
+.purchases-page {
+    background: #f7f8f6;
+    color: #002a3d;
+    min-height: 100vh;
+}
+
+.purchases-main {
+    margin: 0 auto;
+    max-width: 1200px;
+    min-height: 62vh;
+    padding: 88px 32px 120px;
+}
+
+.purchases-heading {
+    border-bottom: 1px solid #d9e0df;
+    margin-bottom: 34px;
+    padding-bottom: 24px;
+}
+
+.purchases-eyebrow {
+    color: #174d54;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+}
+
+.purchases-heading h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+    margin: 0 0 14px;
+}
+
+.purchases-heading > p:last-child {
+    color: #5c6869;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.purchases-table-wrap {
+    background: #ffffff;
+    border: 1px solid #dce4e2;
+    overflow-x: auto;
+}
+
+.purchases-table {
+    border-collapse: collapse;
+    min-width: 620px;
+    text-align: left;
+    width: 100%;
+}
+
+.purchases-table th,
+.purchases-table td {
+    border-bottom: 1px solid #e5eae9;
+    padding: 19px 22px;
+}
+
+.purchases-table thead th {
+    background: #002a3d;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.purchases-table tbody th {
+    color: #174d54;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.purchases-table tbody td {
+    color: #526264;
+    font-size: 0.95rem;
+}
+
+.purchases-table tbody tr:last-child th,
+.purchases-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.purchases-table tbody tr:hover {
+    background: #f1f6f4;
+}
+
+.purchase-status {
+    background: #e2f2e9;
+    border-radius: 999px;
+    color: #226844;
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 10px;
+}
+
+.purchase-total {
+    color: #002a3d !important;
+    font-weight: 700;
+    text-align: right;
+}
+
+.purchases-table thead th:last-child {
+    text-align: right;
+}
+
+.purchases-empty,
+.purchases-error {
+    background: #ffffff;
+    border: 1px solid #dce4e2;
+    padding: 42px 28px;
+    text-align: center;
+}
+
+.purchases-empty h2 {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: 400;
+    margin: 0 0 8px;
+}
+
+.purchases-empty p,
+.purchases-error {
+    color: #5c6869;
+    margin: 0;
+}
+
+.purchases-error {
+    color: #a33d36;
+}
+
+@media (max-width: 700px) {
+    .purchases-main {
+        padding: 58px 18px 80px;
+    }
+
+    .purchases-heading h1 {
+        font-size: 2.7rem;
+    }
+
+    .purchases-table th,
+    .purchases-table td {
+        padding: 15px 16px;
+    }
+}

@@ -47,7 +47,7 @@ const Shop = () => {
 
         {/* Filter Tabs */}
         <div className='ShopTab'>
-            {['All', 'Blazers', 'Shirts', 'Gowns'].map((tab) => (
+            {['All', 'Blazer', 'Shirts', 'Gowns'].map((tab) => (
             <button
                 key={tab}
                 onClick={() => {
@@ -71,7 +71,7 @@ const Shop = () => {
 
 
         {/* Product Grid */}
-        <div style={{
+        <div className="ShopGrid" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
             gap: '32px',
@@ -107,13 +107,14 @@ const Shop = () => {
                     <button
                         className="ShopAddButton"
                         type="button"
-                        onClick={() => {
-                            addItem(product);
-                            setMessage(true)
+                        disabled={product.stock <= 0}
+                        onClick={async () => {
+                            const result = await addItem(product);
+                            setMessage(result?.message || 'Item added to cart');
                             setTimeout(() => setMessage(false), 3000)
                         }}
                     >
-                        Add to cart
+                        {product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
                     </button>
                 <h3 style={{
                     fontFamily: 'serif',
@@ -126,6 +127,9 @@ const Shop = () => {
                     fontWeight: '600',
                     color: '#333333',
                 }}>${product.price}</span>
+                <span className={product.stock <= 0 ? 'ShopStock ShopStockOut' : 'ShopStock'}>
+                    {product.stock <= 0 ? 'Out of stock' : `${product.stock} available`}
+                </span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#888888', margin: '4px 0 0 4px' }}>{product.categorie}</p>
             </div>

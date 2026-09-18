@@ -77,7 +77,7 @@ def get_current_user(
     )
 
     user = db.query(Users).filter(
-        Users.username == username
+        Users.email == username
     ).first()
 
     if user is None:

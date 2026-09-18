@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from Database.tables import Purchases, PurchaseItem
+from Database.tables import CartItem, Products, Purchases, PurchaseItem
 from Schema import purchases, purchaseitems
 
 # Purchase Operations
@@ -25,6 +25,42 @@ def create_purchase(db: Session, user_id: int, req: purchases.PurchasesBase):
 	db.commit()
 	db.refresh(new_data)
 	return new_data
+
+
+def checkout(db: Session, user_id: int):
+    cart_items = db.query(CartItem).filter(CartItem.user_id == user_id).all()
+    if not cart_items:
+        return None
+
+    total_price = 0
+    products_by_id = {}
+    for cart_item in cart_items:
+        product = db.query(Products).filter(Products.id == cart_item.product_id).first()
+        if product is None:
+            raise ValueError("A product in your cart no longer exists")
+        if cart_item.quantity > product.stock:
+            raise ValueError(f"Only {product.stock} {product.name} item(s) available")
+        products_by_id[product.id] = product
+        total_price += product.price * cart_item.quantity
+
+    purchase = Purchases(user_id=user_id, total_price=total_price)
+    db.add(purchase)
+    db.flush()
+
+    for cart_item in cart_items:
+        product = products_by_id[cart_item.product_id]
+        db.add(PurchaseItem(
+            purchase_id=purchase.id,
+            product_id=product.id,
+            quantity=cart_item.quantity,
+            price=product.price
+        ))
+        product.stock -= cart_item.quantity
+        db.delete(cart_item)
+
+    db.commit()
+    db.refresh(purchase)
+    return purchase
 
 
 def update_purchase(

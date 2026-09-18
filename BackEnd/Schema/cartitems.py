@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 class CartResponse(BaseModel):
     id: int
@@ -10,6 +10,11 @@ class CartResponse(BaseModel):
 class CreateCartItem(BaseModel):
     user_id: int
     product_id: int
-    quantity: int = 1
+    quantity: int = Field(default=1, gt=0)
+
+class CreateCurrentCartItem(BaseModel):
+    product_id: int
+    quantity: int = Field(default=1, gt=0)
+
 class UpdateCartItem(BaseModel):
-    quantity: Optional[int] = None
+    quantity: Optional[int] = Field(default=None, gt=0)
