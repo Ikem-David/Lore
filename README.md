@@ -2,7 +2,7 @@
 
 A full-stack e-commerce web application where users can browse in-stock products, manage a shopping cart, and complete a simulated checkout flow.
 
-**Live demo:** [lore-ikem2.vercel.app](https://lore-ikem2.vercel.app)
+**Live demo:** [lore.vercel.app](https://lore-gilt-one.vercel.app)
 
 ## Features
 
